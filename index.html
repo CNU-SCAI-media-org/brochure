@@ -51,13 +51,36 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
   transition:opacity .2s,transform .2s}
 .book{position:absolute;inset:0;background:var(--paper);border-radius:2px;
   overflow:hidden;box-shadow:0 26px 60px rgba(0,0,0,.55)}
+.book.duo{background:transparent;box-shadow:none;overflow:visible;perspective:2600px}
+.book.duo::after{display:none}
+.book:not(.duo) .half,.book:not(.duo) .leaf{display:none}
+.book.duo .sheet{display:none}
 .sheet{position:absolute;inset:0;display:flex;background:var(--paper)}
 .sheet img{flex:1 1 0;min-width:0;height:100%;object-fit:contain;display:block;
   background:var(--paper)}
-.sheet.duo::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:30px;
-  transform:translateX(-50%);pointer-events:none;
-  background:linear-gradient(90deg,transparent,rgba(0,0,0,.08) 42%,
-    rgba(0,0,0,.16) 50%,rgba(0,0,0,.08) 58%,transparent)}
+
+/* ── two-page book: static halves + a 3D flipping leaf ── */
+.half{position:absolute;top:0;bottom:0;width:50%;background:var(--paper);overflow:hidden}
+.half.lh{left:0;border-radius:2px 0 0 2px;box-shadow:0 26px 60px rgba(0,0,0,.55)}
+.half.rh{right:0;border-radius:0 2px 2px 0;box-shadow:0 26px 60px rgba(0,0,0,.55)}
+.half img,.face img{width:100%;height:100%;object-fit:contain;display:block}
+.half.lh::before{content:"";position:absolute;right:0;top:0;bottom:0;width:26px;z-index:2;
+  pointer-events:none;background:linear-gradient(90deg,transparent,rgba(0,0,0,.13))}
+.half.rh::before{content:"";position:absolute;left:0;top:0;bottom:0;width:26px;z-index:2;
+  pointer-events:none;background:linear-gradient(270deg,transparent,rgba(0,0,0,.13))}
+.half.empty{background:transparent;box-shadow:none}
+.half.empty::before{display:none}
+.leaf{position:absolute;top:0;bottom:0;width:50%;display:none;z-index:6;
+  transform-style:preserve-3d;pointer-events:none}
+.leaf.fwd{left:50%;transform-origin:left center}
+.leaf.bwd{left:0;transform-origin:right center}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  background:var(--paper);overflow:hidden}
+.face.back{transform:rotateY(180deg)}
+.face::after{content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,rgba(0,0,0,.10),transparent 28%,
+    transparent 72%,rgba(0,0,0,.04))}
+.face.empty{background:transparent}
 .book::after{content:"";position:absolute;inset:0 auto 0 0;width:22px;z-index:3;
   pointer-events:none;background:linear-gradient(90deg,rgba(0,0,0,.13),transparent)}
 .over{z-index:2}
@@ -130,7 +153,13 @@ footer{flex:0 0 auto;border-top:1px solid var(--rule);padding:9px 16px 12px;
 
   <div class="stage" id="stage">
     <div class="stack" id="stack"></div>
-    <div class="book">
+    <div class="book" id="book">
+      <div class="half lh" id="lh"></div>
+      <div class="half rh" id="rh"></div>
+      <div class="leaf" id="leaf">
+        <div class="face front" id="lf"></div>
+        <div class="face back" id="lb"></div>
+      </div>
       <div class="sheet under" id="under"></div>
       <div class="sheet over"  id="over"></div>
     </div>
@@ -162,6 +191,7 @@ footer{flex:0 0 auto;border-top:1px solid var(--rule);padding:9px 16px 12px;
 const PAGES = [{"src": "pages/01.jpg", "thumb": "thumbs/01.jpg", "label": "표지", "w": 563, "h": 794}, {"src": "pages/02.jpg", "thumb": "thumbs/02.jpg", "label": "인사말", "w": 563, "h": 794}, {"src": "pages/03.jpg", "thumb": "thumbs/03.jpg", "label": "교육목표 · 진로현황", "w": 563, "h": 794}, {"src": "pages/04.jpg", "thumb": "thumbs/04.jpg", "label": "SW중심대학", "w": 563, "h": 794}, {"src": "pages/05.jpg", "thumb": "thumbs/05.jpg", "label": "BK21 plus", "w": 563, "h": 794}, {"src": "pages/06.jpg", "thumb": "thumbs/06.jpg", "label": "정보보호 특성화대학", "w": 563, "h": 794}, {"src": "pages/07.jpg", "thumb": "thumbs/07.jpg", "label": "COSS", "w": 563, "h": 794}, {"src": "pages/08.jpg", "thumb": "thumbs/08.jpg", "label": "학교 행사", "w": 563, "h": 794}, {"src": "pages/09.jpg", "thumb": "thumbs/09.jpg", "label": "학교 행사 · 명랑 운동회", "w": 563, "h": 794}, {"src": "pages/10.jpg", "thumb": "thumbs/10.jpg", "label": "RESEARCH", "w": 1172, "h": 1653}, {"src": "pages/11.jpg", "thumb": "thumbs/11.jpg", "label": "RESEARCH · AWARDS", "w": 1172, "h": 1653}, {"src": "pages/12.jpg", "thumb": "thumbs/12.jpg", "label": "AWARDS · NEWS", "w": 1172, "h": 1653}, {"src": "pages/13.jpg", "thumb": "thumbs/13.jpg", "label": "동아리 성과", "w": 563, "h": 794}, {"src": "pages/14.jpg", "thumb": "thumbs/14.jpg", "label": "동아리 · ANA · SPG", "w": 563, "h": 794}, {"src": "pages/15.jpg", "thumb": "thumbs/15.jpg", "label": "동아리 · ARGOS", "w": 563, "h": 794}, {"src": "pages/16.jpg", "thumb": "thumbs/16.jpg", "label": "마무리", "w": 563, "h": 794}];
 const $=id=>document.getElementById(id);
 const stage=$('stage'), main=$('main'), over=$('over'), under=$('under'), strip=$('strip'), stack=$('stack');
+const book=$('book'), lh=$('lh'), rh=$('rh'), leaf=$('leaf'), lf=$('lf'), lb=$('lb');
 const V='1'; PAGES.forEach(p=>{p.src+='?v='+V; p.thumb+='?v='+V;});
 const RATIO = PAGES[0].w / PAGES[0].h;
 let i=0, busy=false, useAnim=true, spreadMode=innerWidth>860;
@@ -171,16 +201,29 @@ const N = PAGES.length;
 const sOf = p => p===0 ? 0 : Math.ceil(p/2);
 const sPages = s => s===0 ? [0] : [2*s-1, 2*s].filter(k=>k<N);
 const vis = () => spreadMode ? sPages(sOf(i)) : [i];
+/* which page sits on each side of spread s (null = bare table, no paper) */
+const lay = s => ({ left:  s===0 ? null : (2*s-1 < N ? 2*s-1 : null),
+                    right: s===0 ? 0    : (2*s   < N ? 2*s   : null) });
+const imgTag = k => `<img src="${PAGES[k].src}" alt="${k+1}페이지 ${PAGES[k].label}">`;
 function render(el, ps){
-  el.innerHTML = ps.map(k=>`<img src="${PAGES[k].src}" alt="${k+1}페이지 ${PAGES[k].label}">`).join('');
-  el.classList.toggle('duo', ps.length===2);
+  el.innerHTML = ps.map(imgTag).join('');
+}
+function setPane(el, p){
+  el.classList.toggle('empty', p==null);
+  el.innerHTML = p==null ? '' : imgTag(p);
+}
+function renderSpread(s){ setPane(lh, lay(s).left); setPane(rh, lay(s).right); }
+function applyMode(){
+  book.classList.toggle('duo', spreadMode);
+  if(spreadMode) renderSpread(sOf(i));
+  else { render(under,[i]); render(over,[i]); }
 }
 
 $('tot').textContent = PAGES.length;
 
 /* ── size the stage from the box that actually exists ── */
-function fit(pv){
-  pv = pv || vis().length;
+function fit(){
+  const pv = spreadMode ? 2 : 1;
   const r = main.getBoundingClientRect();
   const side = r.width > 760 ? 128 : 24;
   let h = r.height, w = h * RATIO * pv;
@@ -226,33 +269,69 @@ function sync(){
   fit(); drawStack(); warm();
 }
 
+function setFace(el, p){
+  el.classList.toggle('empty', p==null);
+  el.innerHTML = p==null ? '' : imgTag(p);
+}
 function go(n){
   n=Math.max(0,Math.min(N-1,n));
   const curS = spreadMode ? sOf(i) : i;
   const tgtS = spreadMode ? sOf(n) : n;
   if(tgtS===curS||busy) return;
   const dir = tgtS>curS ? 1 : -1;
-  const cp = vis();                       // current pages
   const tp = spreadMode ? sPages(tgtS) : [n];  // target pages
 
   if(!useAnim || reduced){
-    i=tp[0]; render(under,tp); render(over,tp); sync(); return;
-  }
-  busy=true; fit(tp.length);
-  if(dir>0){                       // 다음 장: 현재 장이 걷히며 다음 장이 드러남
-    render(under,tp);
-    over.className='sheet over out';
-  }else{                           // 이전 장: 이전 장이 위로 덮임
-    render(under,cp);
-    render(over,tp);
-    over.className='sheet over in';
-  }
-  setTimeout(()=>{
     i=tp[0];
-    over.className='sheet over';
-    render(over,tp); render(under,tp);
+    if(spreadMode) renderSpread(tgtS);
+    else { render(under,tp); render(over,tp); }
+    sync(); return;
+  }
+  busy=true;
+
+  if(!spreadMode){                 // 한쪽 보기: 슬라이드
+    if(dir>0){
+      render(under,tp);
+      over.className='sheet over out';
+    }else{
+      render(under,[i]);
+      render(over,tp);
+      over.className='sheet over in';
+    }
+    setTimeout(()=>{
+      i=tp[0];
+      over.className='sheet over';
+      render(over,tp); render(under,tp);
+      sync(); busy=false;
+    },230);
+    return;
+  }
+
+  // 두쪽 보기: 낱장이 책등을 축으로 3D 회전
+  const A=lay(curS), B=lay(tgtS);
+  if(dir>0){                       // 오른쪽 장을 왼쪽으로 젖힘
+    setPane(lh, A.left); setPane(rh, B.right);
+    setFace(lf, A.right); setFace(lb, B.left);
+    leaf.className='leaf fwd';
+  }else{                           // 왼쪽 장을 오른쪽으로 되넘김
+    setPane(lh, B.left); setPane(rh, A.right);
+    setFace(lf, A.left); setFace(lb, B.right);
+    leaf.className='leaf bwd';
+  }
+  leaf.style.transition='none';
+  leaf.style.transform='rotateY(0deg)';
+  leaf.style.display='block';
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    leaf.style.transition='transform .65s cubic-bezier(.36,.1,.22,1)';
+    leaf.style.transform=`rotateY(${dir>0?-180:180}deg)`;
+  }));
+  setTimeout(()=>{
+    i=tp[0]; renderSpread(tgtS);
+    leaf.style.display='none';
+    leaf.style.transition='none';
+    leaf.style.transform='rotateY(0deg)';
     sync(); busy=false;
-  },230);
+  },700);
 }
 const nextP=()=>{const ps=vis();go(ps[ps.length-1]+1)};
 const prevP=()=>go(vis()[0]-1);
@@ -297,8 +376,7 @@ $('dual').setAttribute('aria-pressed',spreadMode);
 $('dual').onclick=e=>{
   spreadMode=!spreadMode;
   e.currentTarget.setAttribute('aria-pressed',spreadMode);
-  render(under,vis()); render(over,vis());
-  fit(); sync();
+  applyMode(); fit(); sync();
 };
 $('full').onclick=()=>document.fullscreenElement
   ? document.exitFullscreen() : document.documentElement.requestFullscreen();
@@ -312,7 +390,7 @@ function warm(){[i-1,i+1,i+2].forEach(k=>{
 });}
 const hash=parseInt((location.hash.match(/p(\d+)/)||[])[1]);
 if(hash>=1&&hash<=PAGES.length) i=hash-1;
-render(under,vis()); render(over,vis());
+applyMode();
 addEventListener('hashchange',()=>{
   const h=parseInt((location.hash.match(/p(\d+)/)||[])[1]);
   if(h>=1&&h<=PAGES.length&&h-1!==i) go(h-1);
