@@ -3,21 +3,6 @@
 주소는 이미 `https://jookite.github.io/cnu-brochure/` 로 채워져 있습니다.
 아래 이름 그대로 올리면 추가 수정 없이 바로 동작합니다.
 
-## 올리는 법 — GitHub Pages
-
-1. github.com/new → 리포지토리 이름 **`cnu-brochure`** → **Public** → Create
-2. `uploading an existing file` 클릭
-3. **이 폴더 안의 내용물 전부** 드래그
-   - `index.html`, `cover.jpg`, `pages` 폴더, `thumbs` 폴더
-   - ⚠️ `web` 폴더째로 넣으면 주소가 `/cnu-brochure/web/` 이 되어 안 맞습니다
-4. `Commit changes`
-5. `Settings` → `Pages` → Source: **Deploy from a branch** → `main` / `(root)` → Save
-6. 1~2분 뒤 `https://jookite.github.io/cnu-brochure/` 접속
-
-리포지토리 이름을 `cnu-brochure`가 아닌 다른 걸로 만들면
-`index.html` 위쪽 3줄(canonical, og:url, og:image)의 주소도 같이 바꿔야
-카톡·인스타 미리보기가 정상적으로 뜹니다.
-
 ## 기능
 
 - 특정 페이지 링크: 주소 끝에 `#p10` 을 붙이면 10페이지로 바로 열림
