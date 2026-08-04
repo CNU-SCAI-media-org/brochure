@@ -452,7 +452,14 @@ addEventListener('hashchange',()=>{
   if(h>=1&&h<=PAGES.length&&h-1!==i) go(h-1);
 });
 /* ── 페이지별 의견 (Firebase Firestore) ── */
-const FB_CONFIG = null; /* Firebase 콘솔 > 프로젝트 설정 > 웹 앱 firebaseConfig 객체를 붙여넣으면 '의견' 버튼이 활성화됩니다 */
+const FB_CONFIG = {
+  apiKey: "AIzaSyBvQmM6KVcawROxuoBRUza--EkTZHF6K2Y",
+  authDomain: "cnu-scai-brochure.firebaseapp.com",
+  projectId: "cnu-scai-brochure",
+  storageBucket: "cnu-scai-brochure.firebasestorage.app",
+  messagingSenderId: "689372314177",
+  appId: "1:689372314177:web:af80f535c3683ab16164c0"
+};
 const panel=$('panel'), fbList=$('fbList'), fbPageSel=$('fbPage');
 let fbDb=null, fbFs=null, fbAll=[], fbBooted=false;
 if(!FB_CONFIG) $('fb').style.display='none';
