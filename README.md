@@ -1,6 +1,6 @@
 # 컴퓨터인공지능학부 · 한학기 성과 모음 (웹)
 
-주소는 이미 `https://scai-dev.github.io/cnu-brochure/` 로 채워져 있습니다.
+주소는 이미 `https://scai-media.github.io/brochure/` 로 채워져 있습니다.
 아래 이름 그대로 올리면 추가 수정 없이 바로 동작합니다.
 
 ## 기능
