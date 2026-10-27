@@ -544,7 +544,8 @@ addEventListener('hashchange',()=>{
 });
 
 /* ── 페이지별 의견: 노션 '브로셔 의견' DB에 쌓임 (feedback/Code.gs 중계) ── */
-const FB_URL = 'https://script.google.com/macros/s/AKfycbw1KhWAYTlhnRyi9puV9w1Qgn39a3stfysiAAzOjaYrx2mk4sJzy73_lzFUYpflF3A/exec'; /* Apps Script 웹앱 배포 URL(…/exec)을 넣으면 '의견' 버튼이 켜집니다. 설정법: feedback/README.md */
+/* 의견 기능은 staging(/staging/) 주소에서만 켠다 */
+const FB_URL = !location.pathname.includes('/staging/') ? '' : 'https://script.google.com/macros/s/AKfycbw1KhWAYTlhnRyi9puV9w1Qgn39a3stfysiAAzOjaYrx2mk4sJzy73_lzFUYpflF3A/exec'; /* Apps Script 웹앱 배포 URL(…/exec)을 넣으면 '의견' 버튼이 켜집니다. 설정법: feedback/README.md */
 const panel=$('panel'), fbList=$('fbList'), fbPageSel=$('fbPage'), fbCache={};
 if(!FB_URL) $('fb').style.display='none';
 PAGES.forEach((p,k)=>{
