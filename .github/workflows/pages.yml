@@ -1,32 +1,51 @@
 name: Deploy to GitHub Pages
 
+# main → /brochure/, staging → /brochure/staging/ 를 한 사이트로 함께 배포한다.
 on:
   push:
-    branches: [main]
+    branches: [main, staging]
   workflow_dispatch:
 
 permissions:
   contents: read
   pages: write
   id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  actions: write
 
 jobs:
-  deploy:
+  # github-pages 환경은 main에서만 배포를 허용하므로, staging push는 main 기준 배포를 다시 실행시킨다.
+  trigger:
+    if: github.ref != 'refs/heads/main'
     runs-on: ubuntu-latest
+    steps:
+      - run: gh workflow run pages.yml --ref main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: true
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
+          path: site
+      - uses: actions/checkout@v4
+        with:
+          ref: staging
+          path: site/staging
       - uses: actions/configure-pages@v5
         with:
           enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: site
       - id: deployment
         uses: actions/deploy-pages@v4
