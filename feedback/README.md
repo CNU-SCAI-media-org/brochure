@@ -21,7 +21,7 @@
    - 실행 사용자: **나**
    - 액세스 권한: **모든 사용자**
    - 배포 → 권한 승인(처음 한 번) → **웹 앱 URL**(`https://script.google.com/macros/s/…/exec`) 복사
-5. `index.html`의 `const FB_URL = '';` 안에 그 URL을 넣고 커밋 → `의견` 버튼이 켜집니다.
+5. `index.html`의 `const FB_URL` 에 그 URL을 넣고 커밋 → 주소 끝에 `?review`를 붙이면 `의견` 버튼이 보입니다.
 
 확인: 브라우저에서 `웹앱URL?page=1` 을 열면 `{"rows":[]}` 가 보여야 합니다.
 `{"error":"Notion 404 …"}` 면 1번(연결)을, `{"error":"Notion 401 …"}` 면 3번(토큰)을 다시 확인하세요.
