@@ -15,7 +15,7 @@
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<link rel="preload" as="image" href="pages/01.jpg?v=14">
+<link rel="preload" as="image" href="pages/01.jpg?v=16">
 <style>
 :root{
   --bg:#F3F4F6; --ink:#1F2937; --icon:#374151; --muted:#6B7280; --line:#D5D9E0;
@@ -303,7 +303,7 @@ const $=id=>document.getElementById(id);
 const stage=$('stage'), main=$('main'), over=$('over'), under=$('under'), strip=$('strip'), stack=$('stack');
 const book=$('book'), lh=$('lh'), rh=$('rh'), leaf=$('leaf'), lf=$('lf'), lb=$('lb');
 const slider=$('slider'), grid=$('grid'), q=$('q'), info=$('info');
-const V='14'; PAGES.forEach(p=>{p.src+='?v='+V; p.thumb+='?v='+V;});
+const V='16'; PAGES.forEach(p=>{p.src+='?v='+V; p.thumb+='?v='+V;});
 const RATIO = PAGES[0].w / PAGES[0].h;
 let i=0, busy=false, useAnim=true, spreadMode=innerWidth>860;
 const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

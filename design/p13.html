@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+.intro{display:flex;align-items:center;gap:22px;padding:28px 36px;font-size:27px;font-weight:600;color:var(--navy)}
+.intro i{flex:0 0 auto;width:14px;height:44px;border-radius:7px;background:var(--blue)}
+.clubs{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.clubs.four{grid-template-columns:repeat(4,1fr)}
+.club{border:2px solid var(--line);border-radius:var(--r);overflow:hidden}
+.club .logo{height:190px;display:flex;align-items:center;justify-content:center;padding:26px;background:#fff}
+.clubs.four .club .logo{height:150px;padding:22px}
+.club .logo img{max-width:100%;max-height:100%;object-fit:contain}
+.club .info{border-top:2px solid var(--line);background:var(--tint);padding:18px 22px}
+.club .name{font-size:28px;font-weight:800;color:var(--navy);margin-bottom:8px}
+.clubs.four .club .name{font-size:25px}
+.club .tags{display:flex;gap:10px;flex-wrap:wrap}
+.club .tags span{background:#fff;border:1.5px solid var(--tint2);border-radius:8px;padding:4px 12px;font-size:20px;color:var(--navy);font-weight:600}
+.club .tags span b{color:var(--blue);margin-right:6px}
+</style></head>
+<body><div class="page">
+  <div class="head"><span class="eyebrow">Student Club Achievements</span></div>
+  <div class="stack" style="gap:34px">
+    <h1>동아리 성과</h1>
+    <img class="photo" src="../../content/img/p13_11_0.png" alt="" style="height:760px">
+    <div class="panel intro"><i></i>컴퓨터인공지능학부 소속 동아리가 2026년 1학기 동안 쌓아온 활동과 성과를 소개합니다.</div>
+    <div>
+      <h2>동아리 목록</h2>
+      <div class="clubs">
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_ana.png" alt="ANA"></div><div class="info"><div class="name">ANA</div><div class="tags"><span><b>회장</b>황현석</span><span><b>창립</b>2018</span></div></div></div>
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_spg.png" alt="SPG"></div><div class="info"><div class="name">SPG</div><div class="tags"><span><b>회장</b>정정훈</span><span><b>창립</b>2010</span></div></div></div>
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_argos.png" alt="ARGOS"></div><div class="info"><div class="name">ARGOS</div><div class="tags"><span><b>회장</b>정명섭</span><span><b>창립</b>2003</span></div></div></div>
+      </div>
+      <div class="clubs four" style="margin-top:24px">
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_admin.png" alt="ADMIN"></div><div class="info"><div class="name">ADMIN</div><div class="tags"><span><b>회장</b>김호성</span><span><b>창립</b>1999</span></div></div></div>
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_motion.png" alt="MOTION"></div><div class="info"><div class="name">MOTION</div><div class="tags"><span><b>회장</b>김진서</span><span><b>창립</b>2007</span></div></div></div>
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_daiv.png" alt="dAiv"></div><div class="info"><div class="name">dAiv</div><div class="tags"><span><b>회장</b>김동현</span><span><b>창립</b>2023</span></div></div></div>
+        <div class="club"><div class="logo"><img src="../../content/img/crop_p13_crafton.png" alt="CRAFT:ON"></div><div class="info"><div class="name">CRAFT:ON</div><div class="tags"><span><b>회장</b>권혁주</span><span><b>창립</b>2026</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</div></body></html>

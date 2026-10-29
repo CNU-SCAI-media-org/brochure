@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+.news{display:grid;grid-template-columns:190px 1fr;gap:30px;align-items:start}
+.news+.news{margin-top:26px;padding-top:26px;border-top:2px solid var(--line)}
+.news img{width:190px;height:236px;object-fit:cover;border-radius:14px;display:block}
+.news .t{display:flex;justify-content:space-between;align-items:baseline;gap:20px;margin-bottom:10px}
+.news h3{font-size:32px;margin:0}
+.news .d{font-size:21px;color:var(--sky);white-space:nowrap}
+.news p{font-size:22px;line-height:1.6}
+.tags{margin-top:14px;font-size:20px;color:var(--blue);line-height:1.6}
+.path{margin-top:14px;display:inline-block;background:var(--tint);border-radius:999px;padding:8px 20px;font-size:19.5px;color:var(--navy);font-weight:600}
+.labs{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:10px}
+.labs h4{font-size:24px;color:var(--navy);padding-bottom:10px;border-bottom:3px solid var(--navy);margin-bottom:6px}
+.labs h4 span{color:var(--sky);font-weight:600}
+.labs div.row{display:flex;justify-content:space-between;gap:12px;padding:8px 2px;border-bottom:1px solid var(--line);font-size:20.5px}
+.labs div.row b{color:var(--navy)}
+</style></head>
+<body><div class="page">
+  <div class="head"><span class="eyebrow">Department News</span></div>
+  <h1 style="margin-bottom:34px">학부 News</h1>
+
+  <div class="news">
+    <img src="../../content/img/p19_00_0.png" alt="">
+    <div>
+      <div class="t"><h3>김형석 교수님 부임 (소프트웨어보안 연구실)</h3><span class="d">2025.09.02</span></div>
+      <p>KAIST 정보보호대학원에서 박사학위를 받고 국가보안기술연구소 선임연구원(2011-2025)으로 일하다 2025년 9월 부임했다. ASPLOS 2025, ISSTA 2024, USENIX Security 2023 등에 논문을 발표했으며, 리버스 엔지니어링과 자동 취약점 탐지, 퍼징이 주요 연구 분야다.</p>
+      <div class="tags">#리버스 엔지니어링 #코드 분석 #기계학습 #취약점 탐지 #해킹 #테스팅 #패치</div>
+    </div>
+  </div>
+  <div class="news">
+    <img src="../../content/img/p19_01_0.png" alt="">
+    <div>
+      <div class="t"><h3>충남대 출신 이제민 박사, 전북대학교 교수 임용</h3><span class="d">2026.03.01</span></div>
+      <p>김형신 교수님 지도로 임베디드 시스템 연구실에서 박사학위를 받았다. 이후 KAIST 박사후연구원, ETRI 선임연구원(7년), UST 인공지능학과 교수를 거쳐 2026년 3월 전북대학교 컴퓨터인공지능학부 교수로 부임했다.</p>
+      <div class="path">임베디드 시스템 연구실 박사 → KAIST 박사후연구원 → ETRI 선임연구원 → UST 인공지능학과 교수 → 전북대학교 교수</div>
+    </div>
+  </div>
+  <div class="news">
+    <img src="../../content/img/p19_02_0.png" alt="">
+    <div>
+      <div class="t"><h3>김세진 교수님 부임 (추론 연구실)</h3><span class="d">2026.09.01</span></div>
+      <p>KAIST 전산학부에서 학사·석사·박사 학위를 받고 광주과학기술원(GIST) AI대학원 박사후연구원(2023-2026)을 거쳐 2026년 9월 부임했다. KDD 2025·2026, ICLR 2026, ECML-PKDD 2026 등에 논문을 발표했으며, 인간형 추론과 AI 에이전트, 인공일반지능(AGI)이 주요 연구 분야다.</p>
+      <div class="tags">#Human-like AI #Abstraction and Reasoning #AI Agents #AGI</div>
+    </div>
+  </div>
+
+  <div style="margin-top:40px;padding-top:34px;border-top:2px solid var(--line)">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+      <h2 style="margin:0">연구실 목록 (공대5호관)</h2><span class="cap" style="color:var(--blue)">학부 공식 연구실 30곳</span>
+    </div>
+    <div class="labs">
+      <div>
+        <h4>인공지능 <span>· 15</span></h4>
+        <div class="row"><span>컴퓨터비전</span><b>고영준</b></div><div class="row"><span>생성지능</span><b>권진근</b></div><div class="row"><span>딥러닝 및 과학계산</span><b>김경섭</b></div><div class="row"><span>추론</span><b>김세진</b></div><div class="row"><span>데이터 최적화</span><b>김상묵</b></div><div class="row"><span>스마트데이터</span><b>김영국</b></div><div class="row"><span>웰니스 컴퓨팅</span><b>김재정</b></div><div class="row"><span>정보시스템</span><b>김종익</b></div><div class="row"><span>데이터마이닝</span><b>박정희</b></div><div class="row"><span>인공지능융합</span><b>박지훈</b></div><div class="row"><span>데이터 인공지능</span><b>이규철</b></div><div class="row"><span>머신러닝 및 데이터공학</span><b>이종률</b></div><div class="row"><span>데이터 인텔리전스</span><b>임성수</b></div><div class="row"><span>딥 챌린지</span><b>장경선</b></div><div class="row"><span>지능 소프트웨어</span><b>정상근</b></div>
+      </div>
+      <div>
+        <h4>네트워크및보안 <span>· 7</span></h4>
+        <div class="row"><span>지능형네트워크</span><b>김기일</b></div><div class="row"><span>소프트웨어보안</span><b>김형석</b></div><div class="row"><span>시스템구조 및 보안</span><b>김형식</b></div><div class="row"><span>정보보호</span><b>류재철</b></div><div class="row"><span>사이버보안</span><b>원유재</b></div><div class="row"><span>데이터네트워크</span><b>이영석</b></div><div class="row"><span>시스템보안</span><b>장진수</b></div>
+      </div>
+      <div>
+        <h4>컴퓨터시스템및SW <span>· 8</span></h4>
+        <div class="row"><span>소프트웨어공학 및 응용</span><b>김현수</b></div><div class="row"><span>비주얼컴퓨팅</span><b>김형기</b></div><div class="row"><span>임베디드 시스템</span><b>김형신</b></div><div class="row"><span>지능형 SoC</span><b>남병규</b></div><div class="row"><span>분산 지능 및 시스템</span><b>양희철</b></div><div class="row"><span>소프트웨어분석 및 테스팅</span><b>이성호</b></div><div class="row"><span>컴퓨터 이론</span><b>조승범</b></div><div class="row"><span>프로그래밍 언어 및 시스템</span><b>조은선</b></div>
+      </div>
+    </div>
+  </div>
+</div></body></html>

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="style.css">
+<style>
+.page{padding:0;display:flex;flex-direction:column}
+.top{flex:1 1 auto;position:relative;overflow:hidden;background:#fff}
+.top img.b{position:absolute;left:0;right:0;bottom:0;width:100%;height:100%;object-fit:cover;object-position:center bottom}
+.top::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#fff 0%,rgba(255,255,255,.0) 60%)}
+.top .mark{position:absolute;left:var(--m);top:var(--m);z-index:2}
+.top .mark .e{font-size:22px;letter-spacing:.2em;color:var(--sky);font-weight:700;text-transform:uppercase}
+.top .mark .t{font-size:54px;font-weight:800;color:var(--navy);line-height:1.2;margin-top:14px}
+.top .mark .t span{display:block;font-size:26px;font-weight:500;color:var(--muted);margin-top:10px}
+.foot{flex:0 0 auto;background:var(--navy);color:#fff;padding:70px var(--m) 70px;margin:0;text-align:left;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end}
+.foot .dept{font-size:40px;font-weight:800;margin-bottom:26px}
+.kv{display:grid;grid-template-columns:110px 1fr;gap:12px 20px;font-size:23px;line-height:1.5}
+.kv b{color:#9FB8E3}
+.qr{display:flex;gap:22px}
+.qr div{background:#fff;border-radius:12px;padding:12px}
+.qr img{height:150px;display:block}
+</style></head>
+<body><div class="page">
+  <div class="top">
+    <img class="b" src="../../content/img/crop_p23_building.png" alt="">
+    <div class="mark">
+      <div class="e">Chungnam National University</div>
+      <div class="t">컴퓨터인공지능학부<br>한학기 성과 모음<span>2026학년도 1학기</span></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div>
+      <div class="dept">충남대학교 컴퓨터인공지능학부</div>
+      <div class="kv">
+        <b>제작</b><span>홍보미디어국 1기</span>
+        <b>발행일</b><span>2026년 8월</span>
+        <b>주소</b><span>34134 대전광역시 유성구 대학로 99<br>충남대학교 공과대학 5호관 W2 건물</span>
+        <b>전화</b><span>042-821-7456</span>
+      </div>
+    </div>
+    <div class="qr"><div><img src="../../content/img/crop_p24_home.png" alt="홈페이지"></div><div><img src="../../content/img/crop_p24_insta.png" alt="Instagram"></div><div><img src="../../content/img/crop_p24_yt.png" alt="YouTube"></div></div>
+  </div>
+</div></body></html>
