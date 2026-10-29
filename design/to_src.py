@@ -27,7 +27,9 @@ PLAN = [
 for pages, rel in PLAN:
     doc = fitz.open()
     for n in pages:
-        png = os.path.join(OUT, f"p{n:02d}.png")
+        png = os.path.join(OUT, f"b{n:02d}.png")  # 방향 B 우선, 없으면 A
+        if not os.path.exists(png):
+            png = os.path.join(OUT, f"p{n:02d}.png")
         page = doc.new_page(width=A4.width, height=A4.height)
         pix = fitz.Pixmap(png)
         page.insert_image(page.rect, stream=pix.tobytes("jpg", jpg_quality=88))
