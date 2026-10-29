@@ -1,11 +1,15 @@
 <!doctype html>
 <html lang="ko"><head><meta charset="utf-8"><link rel="stylesheet" href="style2.css">
 <style>
-.band{padding-bottom:56px}
-.body{gap:30px;padding-top:44px}
+.band{padding-bottom:52px}
+.body{gap:28px;padding-top:40px;padding-bottom:0}
 .lab h3{font-size:34px;margin:0}
-.lab p{font-size:22px}
-.pair{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:start}
+.lab p{font-size:23px}
+.pair{display:grid;grid-template-columns:1.05fr 1fr;gap:30px;align-items:start}
+.foot{margin-top:auto;background:var(--navy);color:#fff;padding:34px var(--m);display:flex;justify-content:space-between;align-items:center;position:relative;overflow:hidden}
+.foot .wave2{position:absolute;inset:0;opacity:.35;transform:scaleY(-1)}
+.foot span{position:relative;font-size:19px;letter-spacing:.18em;color:#9FC2F0;font-weight:700;text-transform:uppercase}
+.foot b{position:relative;font-size:22px}
 </style></head>
 <body><div class="page">
   <div class="band">
@@ -19,7 +23,7 @@
   <div class="body">
     <div>
       <div class="tag">각 학회가 공개한 논문 채택률</div>
-      <div class="stats n4" style="margin-top:16px">
+      <div class="stats n4" style="margin-top:14px;padding:30px 20px">
         <div class="stat"><div class="n">17.5<small>%</small></div><div class="l">ASPLOS 2026</div><div class="s">Systems</div></div>
         <div class="stat"><div class="n">22.1<small>%</small></div><div class="l">CVPR 2025</div><div class="s">Computer Vision</div></div>
         <div class="stat"><div class="n">24<small>%</small></div><div class="l">ICCV 2025</div><div class="s">Computer Vision</div></div>
@@ -27,7 +31,7 @@
       </div>
     </div>
 
-    <div class="lab" style="border-top:0;padding-top:6px">
+    <div class="lab" style="border-top:0;padding-top:2px">
       <h3>컴퓨터비전 연구실 <span style="color:var(--blue)">NeurIPS 2025 외 3편</span></h3>
       <span class="who">지도교수 <b>고영준</b> · 2025.12.05</span>
       <div class="pair" style="grid-column:1/-1">
@@ -42,14 +46,14 @@
     <div class="lab">
       <h3>지능소프트웨어 연구실 <span style="color:var(--blue)">EMNLP 2025 최우수 논문</span></h3>
       <span class="who">지도교수 <b>정상근</b> · 2025.12.11</span>
-      <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 300px;gap:30px;align-items:start">
+      <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start">
         <div>
           <p class="lead">EMNLP는 ACL, NAACL과 함께 자연어처리 분야의 대표 학회로, 2025년 11월 5일부터 9일까지 중국 쑤저우에서 열렸다.</p>
           <p>남궁혁, 정지수, 강현석 학생의 논문이 Senior Area Chair Highlights Award를 받았다. 분야별 총괄 의장이 메인 트랙 논문 가운데 소수를 직접 선정하는 상이다. 논문은 차트 코드를 생성하는 에이전트, 결과를 검토해 보완하는 에이전트, 품질을 평가하는 에이전트가 반복 협력해 요구에 맞는 차트를 자동으로 만드는 방법을 제안했다.</p>
         </div>
-        <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="grid2" style="gap:16px;grid-template-columns:300px 1fr;align-items:center">
           <img class="round" src="../../content/img/p16_02_0.png" alt="" style="width:300px;height:300px">
-          <img src="../../content/img/p16_03_0.png" alt="" style="width:100%;border-radius:14px;border:1.5px solid var(--line)">
+          <img src="../../content/img/p16_03_0.png" alt="" style="width:100%;height:300px;object-fit:cover;object-position:center 45%;border-radius:14px;border:1.5px solid var(--line)">
         </div>
       </div>
     </div>
@@ -57,10 +61,16 @@
     <div class="lab">
       <h3>시스템보안 연구실 <span style="color:var(--blue)">ASPLOS 2026</span></h3>
       <span class="who">지도교수 <b>장진수</b> · 2026.02.19</span>
-      <div style="grid-column:1/-1">
+      <div style="grid-column:1/-1;background:var(--tint);border-radius:var(--r);padding:28px 32px">
         <p class="lead">컴퓨터 시스템 분야 최상위 학회인 ASPLOS 2026에 석박사통합과정 한승균, 양지연 학생의 논문이 채택됐다. 발표는 2026년 3월이다.</p>
         <p>신뢰실행환경(TEE)은 기기 안에서 중요한 데이터를 따로 보호하는 영역이다. 기존 기술은 외부에서 데이터를 읽는 것은 막았지만, 운영체제가 데이터를 지우거나 바꾸는 공격에는 취약했다. 이 연구는 저장장치 안에 TEE 전용 영역을 두고 운영체제와 분리해 기밀성과 무결성을 함께 보장하며, RISC-V 보드에서 동작을 검증했다.</p>
       </div>
+    </div>
+
+    <div class="foot">
+      <img class="wave2" src="wave.svg" alt="">
+      <span>Chungnam National University · Dept. of Computer Science &amp; AI</span>
+      <b>16</b>
     </div>
   </div>
 </div></body></html>
