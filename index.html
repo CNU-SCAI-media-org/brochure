@@ -95,6 +95,14 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
 .zone{position:absolute;top:0;bottom:0;width:50%;z-index:4;cursor:pointer}
 .zone.l{left:0} .zone.r{right:0}
 
+/* ── zoom: Ctrl+휠 / Ctrl+(+ − 0) / 더블클릭, 확대 중엔 드래그로 이동 ── */
+.zoomwin{position:absolute;inset:0}
+.book{transform-origin:0 0}
+.stage.zoomed .zoomwin{overflow:hidden;cursor:grab;border-radius:2px}
+.stage.zoomed.panning .zoomwin{cursor:grabbing}
+.stage.zoomed .zone,.stage.zoomed .stack{display:none}
+.stage.zoomed .book{transition:none}
+
 /* thin chevrons just outside the book */
 .nav{position:absolute;top:50%;translate:0 -50%;z-index:5;width:64px;height:120px;
   border:0;background:none;color:#8A9099;cursor:pointer;display:grid;place-items:center;
@@ -201,6 +209,10 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
 <body>
 
 <div class="top" role="toolbar" aria-label="보기 도구">
+  <button class="ic" id="zoomOut" title="축소 (Ctrl −)" aria-label="축소">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8 11h6"/></svg></button>
+  <button class="ic" id="zoomIn" title="확대 (Ctrl + 또는 Ctrl+휠)" aria-label="확대">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4.5 4.5M8 11h6M11 8v6"/></svg></button>
   <button class="ic" id="full" title="전체화면" aria-label="전체화면">
     <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5M4 4l5 5M20 4l-5 5M4 20l5-5M20 20l-5-5"/></svg></button>
   <button class="ic" id="gridBtn" title="전체 페이지" aria-label="전체 페이지">
@@ -222,6 +234,7 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
 <div id="info" hidden>
   <h1>충남대학교 공과대학 컴퓨터인공지능학부<br>한학기 성과 모음</h1>
   <p>2026학년도 1학기</p>
+  <p>확대: Ctrl + 마우스 휠 또는 Ctrl + / − (Ctrl 0 원래 크기), 확대 중에는 드래그로 이동</p>
   <div class="opts">
     <button id="dual">두쪽 보기</button>
     <button id="anim" aria-pressed="true">넘김 효과</button>
@@ -234,6 +247,7 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
     <button class="nav prev" id="prev" aria-label="이전 페이지">
       <svg viewBox="0 0 56 100"><path d="M46 6L10 50l36 44"/></svg></button>
     <div class="stack" id="stack"></div>
+    <div class="zoomwin" id="zoomwin">
     <div class="book" id="book">
       <div class="half lh" id="lh"></div>
       <div class="half rh" id="rh"></div>
@@ -243,6 +257,7 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
       </div>
       <div class="sheet under" id="under"></div>
       <div class="sheet over"  id="over"></div>
+    </div>
     </div>
     <div class="zone l" id="zl"></div>
     <div class="zone r" id="zr"></div>
@@ -329,6 +344,7 @@ function fit(){
   stage.style.width  = Math.floor(w) + 'px';
   stage.style.height = Math.floor(h) + 'px';
   $('bottom').style.width = Math.floor(w) + 'px';
+  if(typeof resetZoom==='function') resetZoom();
 }
 new ResizeObserver(()=>fit()).observe(main);
 addEventListener('orientationchange', () => setTimeout(fit, 120));
@@ -378,6 +394,7 @@ function setFace(el, p){
 }
 function go(n){
   n=Math.max(0,Math.min(N-1,n));
+  resetZoom();
   const curS = spreadMode ? sOf(i) : i;
   const tgtS = spreadMode ? sOf(n) : n;
   if(tgtS===curS||busy){ sync(); return; }
@@ -459,9 +476,57 @@ main.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].c
 main.addEventListener('touchend',e=>{
   if(x0===null)return;
   const dx=e.changedTouches[0].clientX-x0, dy=e.changedTouches[0].clientY-y0;
-  if(Math.abs(dx)>46&&Math.abs(dx)>Math.abs(dy)) dx<0?nextP():prevP();
+  if(Z===1 && Math.abs(dx)>46&&Math.abs(dx)>Math.abs(dy)) dx<0?nextP():prevP();
   x0=null;
 },{passive:true});
+
+/* ── 확대/축소: Ctrl+휠(트랙패드 핀치 포함) · Ctrl + − 0 · 툴바 버튼, 확대 중엔 드래그로 이동 ── */
+const zoomwin=$('zoomwin'), ZMAX=3;
+let Z=1, ZX=0, ZY=0, pan=null;
+function applyZoom(){
+  book.style.transform = Z===1 ? '' : `translate(${ZX}px,${ZY}px) scale(${Z})`;
+  stage.classList.toggle('zoomed', Z>1);
+  $('zoomOut').disabled = Z<=1; $('zoomIn').disabled = Z>=ZMAX;
+}
+function clampPan(){
+  const W=zoomwin.clientWidth, H=zoomwin.clientHeight;
+  ZX=Math.min(0,Math.max(W-W*Z,ZX)); ZY=Math.min(0,Math.max(H-H*Z,ZY));
+}
+function zoomTo(z, cx, cy){            // cx,cy: 화면 좌표. 없으면 가운데 기준
+  z=Math.max(1,Math.min(ZMAX,z));
+  if(z===Z) return;
+  const r=zoomwin.getBoundingClientRect();
+  const px = cx==null ? r.width/2 : cx-r.left, py = cy==null ? r.height/2 : cy-r.top;
+  ZX = px-(px-ZX)*(z/Z); ZY = py-(py-ZY)*(z/Z); Z=z;   // 커서 아래 지점이 그 자리에 머물도록
+  if(Z===1){ ZX=ZY=0; } else clampPan();
+  applyZoom(); toast(`${Math.round(Z*100)}%`);
+}
+function resetZoom(){ if(Z!==1){ Z=1; ZX=ZY=0; applyZoom(); } }
+main.addEventListener('wheel',e=>{
+  if(!e.ctrlKey) return;
+  e.preventDefault();
+  zoomTo(Z*(e.deltaY<0?1.15:1/1.15), e.clientX, e.clientY);
+},{passive:false});
+addEventListener('keydown',e=>{
+  if(!(e.ctrlKey||e.metaKey) || (e.target.matches&&e.target.matches('input,textarea,select'))) return;
+  if(e.key==='='||e.key==='+'){ zoomTo(Z*1.25); e.preventDefault(); }
+  else if(e.key==='-'){ zoomTo(Z/1.25); e.preventDefault(); }
+  else if(e.key==='0'){ zoomTo(1); e.preventDefault(); }
+});
+$('zoomIn').onclick=()=>zoomTo(Z*1.25);
+$('zoomOut').onclick=()=>zoomTo(Z/1.25);
+zoomwin.addEventListener('pointerdown',e=>{
+  if(Z===1) return;
+  pan={x:e.clientX,y:e.clientY,zx:ZX,zy:ZY}; zoomwin.setPointerCapture(e.pointerId);
+  stage.classList.add('panning'); e.preventDefault();
+});
+zoomwin.addEventListener('pointermove',e=>{
+  if(!pan) return;
+  ZX=pan.zx+(e.clientX-pan.x); ZY=pan.zy+(e.clientY-pan.y); clampPan(); applyZoom();
+});
+const endPan=()=>{ pan=null; stage.classList.remove('panning'); };
+zoomwin.addEventListener('pointerup',endPan); zoomwin.addEventListener('pointercancel',endPan);
+applyZoom();
 
 /* ── toolbar ── */
 let toastT;
