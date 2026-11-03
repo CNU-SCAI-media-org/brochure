@@ -169,6 +169,19 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
   .nav{display:none}
 }
 
+/* ── floating feedback button (bottom-right, ?review only) ── */
+#fb{position:fixed;right:22px;bottom:22px;z-index:35;display:flex;align-items:center;gap:8px;
+  padding:0 20px 0 16px;height:52px;border:0;border-radius:26px;cursor:pointer;
+  background:var(--cnu);color:#fff;font:inherit;font-size:15px;font-weight:600;
+  box-shadow:0 8px 24px rgba(27,79,160,.4);transition:transform .15s,box-shadow .15s;
+  animation:fb-in .5s ease .3s both}
+#fb svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round}
+#fb:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(27,79,160,.5)}
+#fb:focus-visible{outline:3px solid #fff;outline-offset:-5px}
+@keyframes fb-in{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media (max-width:760px){#fb{right:14px;bottom:14px;height:46px;font-size:14px;padding:0 16px 0 13px}}
+
 /* ── per-page feedback panel ── */
 #panel{position:fixed;top:0;right:0;bottom:0;width:min(360px,94vw);z-index:40;
   background:#fff;border-left:1px solid var(--line);display:flex;
@@ -225,8 +238,6 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
     <svg viewBox="0 0 24 24"><path d="M7 9V4h10v5M7 17H5a1 1 0 01-1-1v-6a1 1 0 011-1h14a1 1 0 011 1v6a1 1 0 01-1 1h-2"/><rect x="7" y="14" width="10" height="6" rx="1"/></svg></button>
   <button class="ic" id="save" title="이 페이지 저장" aria-label="이 페이지 저장">
     <svg viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5L12 15l4.5-4.5M5 19h14"/></svg></button>
-  <button class="ic" id="fb" title="의견 남기기" aria-label="의견 남기기">
-    <svg viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 011 1v9a1 1 0 01-1 1h-8l-4 3.5V16H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg></button>
   <button class="ic" id="infoBtn" title="정보 · 보기 설정" aria-label="정보 · 보기 설정" aria-expanded="false">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5.5M12 7.6v.1"/></svg></button>
 </div>
@@ -281,6 +292,11 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;
 </div>
 
 <div id="toast" role="status"></div>
+
+<button id="fb" title="이 페이지에 의견 남기기">
+  <svg viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 011 1v9a1 1 0 01-1 1h-8l-4 3.5V16H5a1 1 0 01-1-1V6a1 1 0 011-1z"/></svg>
+  <span>의견 남기기</span>
+</button>
 
 <aside id="panel" aria-label="페이지별 의견">
   <div class="p-head">
