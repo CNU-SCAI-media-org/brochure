@@ -661,6 +661,7 @@ PAGES.forEach((p,k)=>{
 });
 const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 function drawFb(rows){
+  rows=rows.filter(d=>!d.done);   // 노션에서 '처리' 체크된 의견은 사이트에서 숨김 (노션에는 그대로 남음)
   fbList.innerHTML = rows.length ? rows.map(d=>{
     const t=new Date(d.ts);
     const when=`${t.getFullYear()}.${String(t.getMonth()+1).padStart(2,'0')}.${String(t.getDate()).padStart(2,'0')}`;
