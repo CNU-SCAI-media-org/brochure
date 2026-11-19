@@ -205,6 +205,10 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;touch-action:none
 .fb-meta .ok{margin-left:auto;color:#2F8F5B}
 .fb-text{font-size:13px;line-height:1.55;color:var(--ink);white-space:pre-wrap;
   word-break:break-word}
+#fbAllNote{border-top:1px solid var(--line);padding:12px 14px}
+.fb-pg{display:inline-block;border:0;background:#E8EEF8;color:var(--cnu);font:inherit;font-size:11px;font-weight:600;
+  padding:3px 8px;border-radius:10px;margin-bottom:6px;cursor:pointer}
+.fb-pg:hover{background:#D6E2F5}
 .fb-none{font-size:12px;color:var(--muted);text-align:center;padding:26px 0}
 #fbForm{border-top:1px solid var(--line);padding:12px 14px;display:flex;
   flex-direction:column;gap:7px}
@@ -305,6 +309,7 @@ main{flex:1 1 auto;position:relative;min-height:0;display:flex;touch-action:none
     <button id="fbClose" aria-label="닫기">×</button>
   </div>
   <div id="fbList"></div>
+  <div class="p-note" id="fbAllNote" hidden>의견을 남기려면 위에서 페이지를 선택하세요. 페이지 이름을 누르면 그 페이지로 이동합니다.</div>
   <form id="fbForm">
     <input id="fbName" placeholder="이름 (선택)" maxlength="30" autocomplete="off">
     <textarea id="fbText" placeholder="이 페이지에 대한 수정 요청이나 의견을 적어주세요" maxlength="500" required></textarea>
@@ -654,22 +659,47 @@ addEventListener('hashchange',()=>{
 const FB_URL = !new URLSearchParams(location.search).has('review') ? '' : 'https://script.google.com/macros/s/AKfycbw1KhWAYTlhnRyi9puV9w1Qgn39a3stfysiAAzOjaYrx2mk4sJzy73_lzFUYpflF3A/exec'; /* Apps Script 웹앱 배포 URL(…/exec)을 넣으면 '의견' 버튼이 켜집니다. 설정법: feedback/README.md */
 const panel=$('panel'), fbList=$('fbList'), fbPageSel=$('fbPage'), fbCache={};
 if(!FB_URL) $('fb').style.display='none';
+fbPageSel.appendChild(new Option('전체 의견',0));   // 0 = 모든 페이지
 PAGES.forEach((p,k)=>{
   const o=document.createElement('option');
   o.value=k+1; o.textContent=`${k+1}p · ${p.label}`;
   fbPageSel.appendChild(o);
 });
 const esc=s=>s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function drawFb(rows){
+function drawFb(rows,none){
   rows=rows.filter(d=>!d.done);   // 노션에서 '처리' 체크된 의견은 사이트에서 숨김 (노션에는 그대로 남음)
   fbList.innerHTML = rows.length ? rows.map(d=>{
     const t=new Date(d.ts);
     const when=`${t.getFullYear()}.${String(t.getMonth()+1).padStart(2,'0')}.${String(t.getDate()).padStart(2,'0')}`;
-    return `<div class="fb-item${d.done?' done':''}"><div class="fb-meta"><b>${esc(d.name||'익명')}</b><span>${when}</span>${d.done?'<span class="ok">✓ 반영</span>':''}</div><div class="fb-text">${esc(d.text||'')}</div></div>`;
-  }).join('') : '<div class="fb-none">아직 등록된 의견이 없습니다.<br>첫 의견을 남겨주세요.</div>';
+    const chip=d.page?`<button class="fb-pg" data-p="${d.page}" title="이 페이지로 이동">${d.page}p · ${esc(PAGES[d.page-1].label)}</button>`:'';
+    return `<div class="fb-item${d.done?' done':''}">${chip}<div class="fb-meta"><b>${esc(d.name||'익명')}</b><span>${when}</span>${d.done?'<span class="ok">✓ 반영</span>':''}</div><div class="fb-text">${esc(d.text||'')}</div></div>`;
+  }).join('') : `<div class="fb-none">${none||'아직 등록된 의견이 없습니다.<br>첫 의견을 남겨주세요.'}</div>`;
 }
+async function loadAllFb(){
+  // ponytail: 페이지마다 요청(동시 14개). 느려지면 Code.gs에 전체 조회를 추가하고 재배포
+  let done=0; const N=PAGES.length, q=PAGES.map((_,k)=>k+1), isAll=()=>+fbPageSel.value===0;
+  const tick=()=>{ if(isAll()) fbList.innerHTML=`<div class="fb-none">불러오는 중… (${done}/${N})</div>`; };
+  tick();
+  let failed=0;
+  await Promise.all(Array.from({length:14},async()=>{
+    for(let p;(p=q.shift());){
+      try{
+        const d=await (await fetch(`${FB_URL}?page=${p}`)).json();
+        if(d.error) throw new Error(d.error);
+        fbCache[p]=d.rows;
+      }catch(err){ failed++; console.error(err); }
+      done++; tick();
+    }
+  }));
+  if(!isAll()) return;
+  drawFb(PAGES.flatMap((_,k)=>(fbCache[k+1]||[]).map(r=>({...r,page:k+1}))),'확인할 의견이 없습니다.<br>반영이 끝난 의견은 표시되지 않습니다.');
+  if(failed) fbList.insertAdjacentHTML('afterbegin',`<div class="fb-none">${failed}개 페이지의 의견을 불러오지 못했습니다.</div>`);
+}
+fbList.onclick=e=>{ const b=e.target.closest('.fb-pg'); if(b) go(+b.dataset.p-1); };
 async function loadFb(){
   const p=+fbPageSel.value;
+  $('fbForm').hidden = p===0; $('fbAllNote').hidden = p!==0;
+  if(p===0) return loadAllFb();
   if(fbCache[p]) drawFb(fbCache[p]); else fbList.innerHTML='<div class="fb-none">불러오는 중…</div>';
   try{
     const d=await (await fetch(`${FB_URL}?page=${p}`)).json();
@@ -684,6 +714,7 @@ async function loadFb(){
 function fbSync(){
   if(!panel.classList.contains('open')) return;
   const p=vis()[0]+1;
+  if(+fbPageSel.value===0) return;          // 전체 보기 중엔 페이지를 넘겨도 유지
   if(+fbPageSel.value!==p){ fbPageSel.value=p; loadFb(); }
 }
 $('fb').onclick=()=>{ closeInfo(); panel.classList.add('open'); fbPageSel.value=vis()[0]+1; loadFb(); };
